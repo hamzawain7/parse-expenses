@@ -1,0 +1,18 @@
+.app {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  height: 100vh;
+}
+
+.detailsContainer {
+  flex-grow: 1;
+  overflow: scroll;
+  height: 100%;
+  width: 40%;
+}
+
+.textInput {
+  width: 200px;
+  height: 100%;
+}

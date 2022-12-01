@@ -1,40 +1,62 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
+import {ChangeEventHandler, useMemo, useState} from "react";
 import "./App.css";
+import styles from "./App.module.scss";
+import {getTotalExpenseAmount, parseExpenseText} from "./utils/expense-parser";
+import ReactJson from "react-json-view";
+import {AgGridReact} from "ag-grid-react";
+import {VENDOR_NAME_HASHMAP, VENDOR_TYPE} from "./utils/vendor-utils";
 
 function App() {
-  const [count, setCount] = useState(0);
+    const [inputTextVal, setInputTextVal] = useState('');
 
-  return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <h2>On CodeSandbox!</h2>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR.
-        </p>
+    const onTextInputChange: ChangeEventHandler<HTMLInputElement> = (evt) => {
+        const val = evt.target.value;
+        setInputTextVal(val);
+    }
 
-        <p>
-          Tip: you can use the inspector button next to address bar to click on
-          components in the preview and open the code in the editor!
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  );
+    console.log(parseExpenseText(inputTextVal));
+
+    const getColumns = () => {
+        let columns = [];
+        for (let [vendorType,] of Object.entries(VENDOR_TYPE)) {
+            columns.push({
+                field: vendorType
+            })
+        }
+        console.log(columns);
+        return columns;
+    }
+
+    const defaultColDef = useMemo(() => ({
+        resizable: true,
+        sortable: true
+    }), []);
+
+    const getRows = () => {
+        return [];
+    }
+
+    console.log(parseExpenseText(inputTextVal), getTotalExpenseAmount(inputTextVal));
+    return (
+        <div className="App">
+            <div className={styles.app}>
+                <input
+                    className={styles.textInput}
+                    type="text"
+                    value={inputTextVal}
+                    onChange={onTextInputChange}
+                />
+                {/*<div className={`ag-theme-alpine ${styles.detailsContainer}`} >*/}
+                <AgGridReact
+                    rowData={getRows()}
+                    columnDefs={getColumns()}
+                    suppressRowClickSelection={true}
+                    defaultColDef={defaultColDef}
+                />
+                {/*</div>*/}
+            </div>
+        </div>
+    );
 }
 
 export default App;
