@@ -27,9 +27,9 @@ export const parseExpenseText = (text: string) => {
         },
     };
 
-    const purchases = getFromBetween.get(text, "used for PKR ", ". Limit");
+    const purchases = getFromBetween.get(text, "used for PKR ", ". Avl Limit");
     for (const purchase of purchases) {
-        let purchaseAmount = parseInt(purchase.split(" at ")[0].replace(',', ''));
+        let purchaseAmount = parseInt(purchase.split(" on ")[0].replace(',', ''));
         let purchaseVendor = purchase.split(" at ")[2];
         let misc = true;
 
